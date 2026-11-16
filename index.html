@@ -2,15 +2,54 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>메인 페이지</title>
+    <title>FinalWeb 메인</title>
+    <style>
+        /* 방명록 영역 기본 숨김 처리 및 여백 설정 */
+        #guestbook-section {
+            display: none;
+            margin-top: 20px;
+            max-width: 800px;
+        }
+    </style>
 </head>
 <body>
     <hr>
-    <!-- GitHub Issues 게시판으로 이동 (예시) -->
-    <a href="https://github.com/asta7107/FinalWeb/issues/1#issue-6411852070">게시판 이슈 이동</a>
+    <a href="https://github.com/asta7107/FinalWeb/issues" target="_blank">게시판 이슈 이동</a>
     <hr>
-    <!-- Giscus가 적용된 방명록 페이지로 이동 -->
-    <a href="guestbook.html">방명록 이동</a>
+    <!-- 페이지 이동을 막고 자바스크립트 함수를 호출하도록 설정 -->
+    <a href="javascript:void(0);" onclick="toggleGuestbook()">방명록 이동</a>
     <hr>
+
+    <!-- 밑줄(<hr>) 아래에 나타날 방명록 영역 -->
+    <div id="guestbook-section">
+        <script src="https://giscus.app/client.js"
+                data-repo="asta7107/FinalWeb"
+                data-repo-id="R_kgDOVvx8ag"
+                data-category="General"
+                data-category-id="DIC_kwDOVvx8as4DLOYr"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="preferred_color_scheme"
+                data-lang="ko"
+                crossorigin="anonymous"
+                async>
+        </script>
+    </div>
+
+    <script>
+        function toggleGuestbook() {
+            const guestbook = document.getElementById('guestbook-section');
+            
+            // 현재 숨겨져 있으면 보여주고, 이미 열려 있으면 다시 숨김
+            if (guestbook.style.display === 'none' || guestbook.style.display === '') {
+                guestbook.style.display = 'block';
+            } else {
+                guestbook.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
