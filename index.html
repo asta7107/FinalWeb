@@ -4,61 +4,24 @@
     <meta charset="UTF-8">
     <title>FinalWeb 메인</title>
     <style>
-        /* 아래쪽에 나타날 영역 공통 스타일 */
-        .content-section {
+        /* 방명록 영역 기본 숨김 처리 및 여백 설정 */
+        #guestbook-section {
             display: none;
             margin-top: 20px;
             max-width: 800px;
-        }
-        /* 이슈 목록 아이템 스타일 */
-        .issue-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #e1e4e8;
-        }
-        .issue-title {
-            font-weight: bold;
-            font-size: 16px;
-            color: #0969da;
-            text-decoration: none;
-        }
-        .issue-title:hover {
-            text-decoration: underline;
-        }
-        .issue-meta {
-            font-size: 12px;
-            color: #57606a;
-            margin-top: 4px;
-        }
-        .new-issue-btn {
-            display: inline-block;
-            margin-bottom: 15px;
-            padding: 6px 12px;
-            background-color: #2da44e;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <hr>
-    <!-- 1. 게시판 이슈 영역 열기/닫기 -->
-    <a href="javascript:void(0);" onclick="toggleSection('issue-section')">게시판 이슈 이동</a>
+    <a href="https://github.com/asta7107/FinalWeb/issues" target="_blank">게시판 이슈 이동</a>
     <hr>
-    <!-- 2. 방명록 영역 열기/닫기 -->
-    <a href="javascript:void(0);" onclick="toggleSection('guestbook-section')">방명록 이동</a>
+    <!-- 페이지 이동을 막고 자바스크립트 함수를 호출하도록 설정 -->
+    <a href="javascript:void(0);" onclick="toggleGuestbook()">방명록 이동</a>
     <hr>
 
-    <!-- ▼▼▼ 밑줄(<hr>) 아래에 나타날 [게시판 이슈] 화면 ▼▼▼ -->
-    <div id="issue-section" class="content-section">
-        <h3>게시판 이슈 목록</h3>
-        <a href="https://github.com/asta7107/FinalWeb/issues/new" target="_blank" class="new-issue-btn">+ 새 이슈 작성하기</a>
-        <div id="issue-list">이슈 목록을 불러오는 중입니다...</div>
-    </div>
-
-    <!-- ▼▼▼ 밑줄(<hr>) 아래에 나타날 [방명록] 화면 ▼▼▼ -->
-    <div id="guestbook-section" class="content-section">
+    <!-- 밑줄(<hr>) 아래에 나타날 방명록 영역 -->
+    <div id="guestbook-section">
         <script src="https://giscus.app/client.js"
                 data-repo="asta7107/FinalWeb"
                 data-repo-id="R_kgDOVvx8ag"
@@ -77,54 +40,16 @@
     </div>
 
     <script>
-        let isIssuesLoaded = false;
-
-        // 클릭한 섹션은 열고, 나머지 섹션은 닫는 함수
-        function toggleSection(sectionId) {
-            const issueSec = document.getElementById('issue-section');
-            const guestbookSec = document.getElementById('guestbook-section');
-            const target = document.getElementById(sectionId);
-
-            // 이미 열려 있는 링크를 다시 누르면 닫기
-            if (target.style.display === 'block') {
-                target.style.display = 'none';
-                return;
-            }
-
-            // 둘 다 먼저 숨긴 뒤 선택한 영역만 표시
-            issueSec.style.display = 'none';
-            guestbookSec.style.display = 'none';
-            target.style.display = 'block';
-
-            // 이슈 영역을 처음 열 때만 GitHub API에서 이슈 목록을 가져옴
-            if (sectionId === 'issue-section' && !isIssuesLoaded) {
-                fetchGitHubIssues();
+        function toggleGuestbook() {
+            const guestbook = document.getElementById('guestbook-section');
+            
+            // 현재 숨겨져 있으면 보여주고, 이미 열려 있으면 다시 숨김
+            if (guestbook.style.display === 'none' || guestbook.style.display === '') {
+                guestbook.style.display = 'block';
+            } else {
+                guestbook.style.display = 'none';
             }
         }
-
-        // GitHub 저장소에서 이슈 목록을 불러오는 함수
-        async function fetchGitHubIssues() {
-            const listContainer = document.getElementById('issue-list');
-            try {
-                const response = await fetch('https://api.github.com/repos/asta7107/FinalWeb/issues');
-                const issues = await response.json();
-
-                if (!Array.isArray(issues) || issues.length === 0) {
-                    listContainer.innerHTML = '<p>등록된 이슈가 없습니다.</p>';
-                    isIssuesLoaded = true;
-                    return;
-                }
-
-                listContainer.innerHTML = ''; // 로딩 텍스트 초기화
-                issues.forEach(issue => {
-                    // Pull Request 제외 순수 이슈만 출력
-                    if (issue.pull_request) return;
-
-                    const date = new Date(issue.created_at).toLocaleDateString('ko-KR');
-                    const item = document.createElement('div');
-                    item.className = 'issue-item';
-                    item.innerHTML = `
-                        <a href="${issue.html_url}" target="_blank" class="issue-title">#${issue.number} ${issue.title}</a>
-                        <div class="issue-meta">작성자: ${issue.user.login} | 작성일: ${date} | 상태: ${issue.state}</div>
-                    `;
-                    listContainer.appendChild(
+    </script>
+</body>
+</html>
